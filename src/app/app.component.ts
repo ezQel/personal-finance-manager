@@ -34,10 +34,10 @@ export class AppComponent implements OnInit {
   constructor(private dialog: MatDialog, private app: AppService) {}
 
   ngOnInit(): void {
-    this.getDays();
+    this.getDayTransactions();
   }
 
-  getDays(): void {
+  getDayTransactions(): void {
     this.days$ = this.app.getDayTransactions();
     this.totals$ = this.app.getTotals();
   }
@@ -48,6 +48,6 @@ export class AppComponent implements OnInit {
 
   addTransaction(): void {
     const dialogRef = this.dialog.open(TransactionAddComponent);
-    dialogRef.afterClosed().subscribe(() => this.getDays());
+    dialogRef.afterClosed().subscribe(() => this.getDayTransactions());
   }
 }

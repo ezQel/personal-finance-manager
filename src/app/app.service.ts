@@ -7,25 +7,28 @@ import { Totals } from './types/totals';
 import { Transaction } from './types/transaction';
 import { groupBy, reduce } from 'underscore';
 import { formatDate } from '@angular/common';
+import PouchDb from 'pouchdb-browser';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppService {
+  db: PouchDB.Database;
+
   transactions: Transaction[] = [
     {
       amount: 20000,
       date: 1703176019532,
       description: 'Fees',
-      id: 1,
+      _id: '1',
       type: 'EXPENSE',
       categoryName: 'Education',
     },
     {
       amount: 200,
-      date: 1703276019590,
+      date: 1718276019590,
       description: 'Lunch',
-      id: 2,
+      _id: '2',
       type: 'EXPENSE',
       categoryName: 'Food',
     },
@@ -33,23 +36,23 @@ export class AppService {
       amount: 1200000,
       date: 1703176019590,
       description: 'Work',
-      id: 12,
+      _id: '12',
       type: 'INCOME',
       categoryName: 'Salary',
     },
     {
       amount: 20000,
-      date: 1703176019532,
+      date: 1706001607906,
       description: 'Fees',
-      id: 1,
+      _id: '3',
       type: 'EXPENSE',
       categoryName: 'Education',
     },
     {
       amount: 200,
-      date: 1703176019590,
+      date: 1706001607906,
       description: 'Supper',
-      id: 2,
+      _id: '4',
       type: 'EXPENSE',
       categoryName: 'Food',
     },
@@ -57,7 +60,7 @@ export class AppService {
       amount: 1200000,
       date: 1703176019590,
       description: 'Work',
-      id: 12,
+      _id: '5',
       type: 'INCOME',
       categoryName: 'Salary',
     },
@@ -65,7 +68,7 @@ export class AppService {
       amount: 20000,
       date: 1703176019532,
       description: 'Fees',
-      id: 1,
+      _id: '6',
       type: 'EXPENSE',
       categoryName: 'Food',
     },
@@ -73,21 +76,23 @@ export class AppService {
       amount: 200,
       date: 1703176019590,
       description: 'Food',
-      id: 2,
+      _id: '7',
       type: 'EXPENSE',
       categoryName: 'Food',
     },
     {
       amount: 1200000,
-      date: 1703176019590,
+      date: 1709176019590,
       description: 'Work',
-      id: 12,
+      _id: '8',
       type: 'INCOME',
       categoryName: 'Food',
     },
   ];
 
-  constructor() {}
+  constructor() {
+    this.db = new PouchDb('transactions');
+  }
 
   addTransaction(transaction: Transaction): Observable<unknown> {
     return of();

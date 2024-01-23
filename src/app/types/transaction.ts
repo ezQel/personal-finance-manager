@@ -1,7 +1,7 @@
 import { TransactionType } from './transaction-type';
 
 export type Transaction = {
-  id: number;
+  _id: string;
   date: string | number;
   type: TransactionType;
   amount: number;

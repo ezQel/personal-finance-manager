@@ -1,27 +1,31 @@
-# PersonalFinanceManager
+# Personal Finance Manager
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.10.
+A web app that assists individuals with budgeting and tracking of their income and expenses.
 
-## Development server
+## Table of Contents
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- [Project Purpose](#project-purpose)
+- [Getting Started](#getting-started)
+- [Testing](#testing)
 
-## Code scaffolding
+# Project Purpose/Justification
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+The puropose of this project is to demonstrate the following:
 
-## Build
+- Using tailwind in an angular application
+- Testing in angular
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+# Getting Started
 
-## Running unit tests
+1. Install `nvm` then `node` & `npm`: `brew install nvm && nvm install`
+2. Install dependencies: `npm install`
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Recommended `node` setup
 
-## Running end-to-end tests
+In order to have more consistent builds, use a strict `node` and `npm` version as defined in the `package.json` `engines` field and `.nvmrc` file. It is recommended to install `node` via `nvm` for easy node version management. Automatic `node` version switching can be installed for [`zsh`](https://github.com/nvm-sh/nvm#zsh) or [`bash`](https://github.com/nvm-sh/nvm#bash) using `nvm`.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Running the web app 🕸
 
-## Further help
+- To run the **development web app**: `npm start` or `ng serve`
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+# Testing

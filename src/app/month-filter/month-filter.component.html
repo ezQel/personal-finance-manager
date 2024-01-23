@@ -1,0 +1,48 @@
+<button
+  (click)="isOpen = !isOpen"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+  type="button"
+  class="text-black-400 font-medium"
+>
+  {{ months[currentMonthIndex] }}
+
+  @if (currentYear !== year) {
+  <span>{{ year }}</span>
+  }
+
+  <i class="fa fa-caret-down ml-2"></i>
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen"
+  (overlayOutsideClick)="isOpen = false"
+>
+  <div class="drop-shadow-lg bg-white rounded-lg w-120 p-8">
+    <div class="mb-6 text-center">
+      <button (click)="gotoPreviousYear()">
+        <i class="fa fa-angle-left"></i>
+      </button>
+      <span class="mx-8">{{ year }}</span>
+      <button (click)="gotoNextYear()">
+        <i class="fa fa-angle-right"></i>
+      </button>
+    </div>
+    <div class="grid grid-cols-4 gap-4">
+      @for (month of months; track $index) {
+      <button
+        (click)="changeMonth($index)"
+        class="p-1"
+        [ngClass]="{
+          'rounded ring ring-1 ring-green-600 text-green-600 font-semibold':
+            year === currentYear && $index === currentMonthIndex
+        }"
+      >
+        {{ month }}
+      </button>
+      }
+    </div>
+  </div>
+</ng-template>

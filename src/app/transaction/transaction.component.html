@@ -1,0 +1,20 @@
+<div class="flex items-center py-4 mx-4 border-b border-slate-50">
+  <div class="mr-4 text-xl">
+    @if (transaction?.type === 'INCOME') {
+    <i class="fa-solid fa-circle-down text-green-600"></i>
+    } @else {
+    <i class="fa-solid fa-circle-up text-slate-500"></i>
+    }
+  </div>
+  <div class="grow text-gray-700">
+    {{ transaction?.categoryName }}<br />
+    <small class="text-gray-500">{{ transaction?.description }}</small>
+  </div>
+  <div class="font-semibold">
+    @if (transaction?.type === 'INCOME') {
+    <span class="text-green-600">+ {{ transaction?.amount | number }}</span>
+    } @else {
+    <span class="text-slate-600">- {{ transaction?.amount | number }}</span>
+    }
+  </div>
+</div>

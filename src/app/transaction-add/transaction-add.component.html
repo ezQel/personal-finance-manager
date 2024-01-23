@@ -1,0 +1,59 @@
+<!-- Backdrop -->
+<!-- <div class="fixed top-0 left-0 right-0 bottom-0 bg-black/50"></div> -->
+<!-- /Backdrop -->
+
+<form class="w-96" [formGroup]="transactionForm">
+  <div matDialogContent>
+    <div class="font-semibold text-black text-lg">Add</div>
+
+    @if(errorMessage){
+    <p class="p-4 rounded-lg text-red-700 bg-red-100 my-4">
+      {{ errorMessage }}
+    </p>
+    }
+
+    <div class="my-5">
+      <mat-button-toggle-group class="w-full" formControlName="type" aria-label="Transaction type">
+        <mat-button-toggle class="w-full" value="EXPENSE"> Expense </mat-button-toggle>
+        <mat-button-toggle class="w-full" value="INCOME"> Income </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <div class="mb-5 flex items-end">
+      <div class="grow">
+        <label class="text-sm block mb-3" for="category">Category</label>
+        <mat-select id="category" class="form-control" formControlName="categoryId">
+          <mat-option><i class="fa fa-plus me-2"></i>Add Category</mat-option>
+          @for (category of categories$ | async; track category.id) {
+          @if (category.type === transactionForm.get('type')?.value) {
+
+              <mat-option [value]="category.id">
+              {{ category.name }}
+            </mat-option>
+            }
+          }
+        </mat-select>
+      </div>
+      <div class="ms-2">
+        <label for="date" class="text-sm block mb-3">Date</label>
+        <!-- <label for="date"><i class="fa fa-calendar me-2"></i>Today</label> -->
+        <input class="form-control" id="date" type="date" formControlName="date" />
+      </div>
+    </div>
+
+    <div class="mb-5">
+      <label class="text-sm block mb-3" for="amount">Amount</label>
+      <input class="form-control d-block w-full" id="amount" type="number" formControlName="amount" />
+    </div>
+
+    <div>
+      <label class="text-sm block mb-3" for="description">Description</label>
+      <textarea class="form-control block w-full" id="description" rows="2" formControlName="description"></textarea>
+    </div>
+  </div>
+
+  <div matDialogActions class="flex">
+    <button matDialogClose class="btn-secondary me-3">Close</button>
+    <button class="btn-primary grow" (click)="saveTransaction()" type="submit">Save</button>
+  </div>
+</form>

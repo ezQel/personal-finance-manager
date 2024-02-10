@@ -22,9 +22,9 @@
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
     "pouchdb-browser": "^8.0.1",
+    "pouchdb-find": "^8.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "underscore": "^1.13.6",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {
@@ -38,7 +38,6 @@
     "@angular/compiler-cli": "^17.0.0",
     "@types/jasmine": "~5.1.0",
     "@types/pouchdb-browser": "^6.1.5",
-    "@types/underscore": "^1.11.15",
     "@typescript-eslint/eslint-plugin": "6.19.0",
     "@typescript-eslint/parser": "6.19.0",
     "autoprefixer": "^10.4.17",

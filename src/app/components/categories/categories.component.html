@@ -1,0 +1,33 @@
+<div matDialogTitle>{{ type | titlecase }} Categories</div>
+
+<div matDialogContent>
+  <form [formGroup]="categoryForm" class="flex py-4">
+    <div class="grow me-3">
+      <input
+        class="form-control block w-full"
+        id="name"
+        placeholder="Enter new category"
+        formControlName="name"
+        required
+      />
+    </div>
+    <button class="btn-primary" (click)="saveCategory()" type="submit" [disabled]="saving || categoryForm.invalid">
+      Save
+    </button>
+  </form>
+
+  <app-error-message [message]="errorMessage" />
+
+  @for (category of categories; track category._id) {
+  <div class="flex p-4 hover:bg-gray-50 cursor-pointer">
+    <div class="grow">{{ category.name }}</div>
+    <button (click)="deleteCategory(category)" title="Remove category">
+      <i class="fa fa-trash hover:text-red-600"></i>
+    </button>
+  </div>
+  }
+</div>
+
+<div matDialogActions>
+  <button matDialogClose class="btn-secondary w-full">Close</button>
+</div>

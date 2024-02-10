@@ -1,0 +1,62 @@
+<form [formGroup]="transactionForm" class="p-4">
+  <div class="my-5">
+    <mat-button-toggle-group class="w-full" formControlName="type" aria-label="Transaction type">
+      <mat-button-toggle class="w-full" value="EXPENSE"> Expense </mat-button-toggle>
+      <mat-button-toggle class="w-full" value="INCOME"> Income </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <app-error-message [message]="errorMessage" />
+
+  <div class="mb-5 md:grid grid-cols-2 gap-2 items-end">
+    <div>
+      <label class="text-sm block mb-3" for="category">Category</label>
+      <mat-select
+        id="category"
+        class="form-control"
+        formControlName="categoryId"
+        placeholder="Select category"
+        required
+      >
+        <mat-option (click)="addCategory(); $event.stopPropagation()">
+          <i class="fa fa-plus me-2"></i>Add Category
+        </mat-option>
+        @for (category of categories; track category._id) { @if (category.type === transactionForm.get('type')?.value) {
+        <mat-option [value]="category._id">{{ category.name }}</mat-option>
+        } }
+      </mat-select>
+    </div>
+    <div class="mt-5 md:mt-0">
+      <label for="date" class="text-sm block mb-3">Date</label>
+      <input class="form-control w-full" id="date" type="date" formControlName="date" required />
+    </div>
+  </div>
+
+  <div class="mb-5">
+    <label class="text-sm block mb-3" for="amount">Amount</label>
+    <input
+      class="form-control d-block w-full"
+      id="amount"
+      type="number"
+      formControlName="amount"
+      placeholder="Enter amount"
+      required
+    />
+  </div>
+
+  <div class="mb-5">
+    <label class="text-sm block mb-3" for="note">Note</label>
+    <textarea
+      class="form-control block w-full"
+      id="note"
+      rows="2"
+      formControlName="note"
+      placeholder="Brief optional note..."
+    ></textarea>
+  </div>
+
+  <div class="flex mb-5">
+    <button (click)="closeSheet()" class="btn-secondary me-3">Close</button>
+    <button class="btn-primary grow" (click)="saveTransaction()" type="submit" [disabled]="saving">Save</button>
+  </div>
+</form>

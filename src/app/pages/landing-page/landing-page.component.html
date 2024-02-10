@@ -1,0 +1,55 @@
+<div class="h-dvh">
+  <div class="lg:w-[1280px] lg:mx-auto mx-8 p-4">
+    <header class="my-16 font-bold text-2xl text-green-600">
+      <i class="fa fa-wallet text-3xl mr-2 -rotate-45"></i> Money Manager
+    </header>
+
+    <main class="lg:flex lg:flex-row-reverse">
+      <div class="lg:ml-8 mt-8">
+        <div class="lg:px-16">
+          <div class="relative w-full max-w-lg">
+            <div
+              class="absolute top-0 -left-4 w-64 h-64 lg:w-96 lg:h-96 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"
+            ></div>
+            <div
+              class="absolute top-0 -right-4 w-64 h-64 lg:w-96 lg:h-96 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"
+            ></div>
+            <div
+              class="absolute -bottom-8 lg:left-32 w-64 h-64 lg:w-96 lg:h-96 bg-red-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"
+            ></div>
+            <div class="m-8 relative space-y-4">
+              @for (day of days; track $index) {
+              <app-day [day]="day" [disabled]="true"></app-day>
+              }
+
+              <div class="w-[120px] lg:w-[400px]"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <article class="w-full lg:w-1/2 mt-28 space-y-8 pr-12">
+        <h1 class="text-6xl text-gray-800 font-semibold">Unlock financial brilliance</h1>
+        <p class="text-[20px] text-gray-500">
+          Smart Money Management to help you make informed and intentional financial decisions. Your path to financial
+          empowerment starts here.
+        </p>
+        <button class="btn-primary w-full lg:w-auto px-10 py-5 text-xl" id="btn-demo" routerLink="/transactions">
+          Try a Demo <i class="fa fa-arrow-right ml-2"></i>
+        </button>
+      </article>
+    </main>
+  </div>
+
+  <footer class="mt-10">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path
+        fill="#dcfce7"
+        fill-opacity="1"
+        d="M0,128L48,122.7C96,117,192,107,288,122.7C384,139,480,181,576,213.3C672,245,768,267,864,250.7C960,235,1056,181,1152,165.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+      ></path>
+    </svg>
+    <div class="h-[1px] bg-gradient-to-r from-green-500 via-green-200 to-green-300"></div>
+    <div class="text-center font-light text-sm py-4">&copy; 2024, Ezekiel Charo</div>
+  </footer>
+</div>

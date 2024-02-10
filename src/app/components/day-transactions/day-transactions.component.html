@@ -1,6 +1,6 @@
 <div class="font-medium text-md text-gray-600 mb-4">{{ dayName }}</div>
-<div class="bg-white rounded-xl drop-shadow-sm p-4 mb-6">
+<div class="bg-white rounded-xl drop-shadow-sm py-4 mb-6">
   @for (transaction of day.transactions; track transaction._id) {
-  <app-transaction [transaction]="transaction" />
+  <app-transaction [transaction]="transaction" [disabled]="disabled" />
   }
 </div>

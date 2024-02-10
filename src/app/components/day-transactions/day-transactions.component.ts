@@ -1,28 +1,29 @@
-import { CommonModule, formatDate } from '@angular/common';
+import { formatDate } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { DayTransactions } from '../types/day-transactions';
 import { TransactionComponent } from '../transaction/transaction.component';
+import { DayTransactions } from '../../types/day-transactions';
 
 /**
- * List transactions for a certain day in the month
+ * Lists transactions for a day in the month
  */
 @Component({
   selector: 'app-day',
   standalone: true,
-  imports: [CommonModule, TransactionComponent],
+  imports: [TransactionComponent],
   templateUrl: './day-transactions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DayTransactionComponent {
   @Input() day!: DayTransactions;
+  @Input() disabled = false;
 
+  /**
+   * Get what day it is in the month. e.g. 'Mon 21'
+   */
   get dayName(): string {
-    const today = new Date().toLocaleDateString();
-    const transactionsDate = new Date(
-      this.day.date
-    ).toLocaleTimeString();
+    const today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
 
-    if (today === transactionsDate) {
+    if (today === this.day.date) {
       return 'Today';
     }
 

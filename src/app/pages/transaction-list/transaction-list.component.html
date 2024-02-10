@@ -1,0 +1,46 @@
+<div class="lg:w-[768px] mx-auto p-5">
+  <div class="mb-8 font-bold text-2xl text-green-600">
+    <i class="fa fa-wallet text-3xl mr-2 -rotate-45"></i> Money Manager
+  </div>
+
+  <div class="py-4 mb-4">
+    <app-month-filter (monthChanged)="getTransactions($event)" />
+  </div>
+
+  @if (days$ | async; as days) { @if (days.length > 0) {
+  <!-- TOTALS -->
+  <div class="grid grid-cols-3 gap-3 mb-12">
+    <div class="bg-white drop-shadow-sm p-4 rounded-lg">
+      <div class="text-xs text-gray-500 mb-2">Income</div>
+      <div class="md:text-2xl text-slate-600 font-bold">{{ totalIncome | number }}</div>
+    </div>
+    <div class="bg-white drop-shadow-sm p-4 rounded-lg">
+      <div class="text-xs text-gray-600 mb-2">Expense</div>
+      <div class="md:text-2xl text-slate-600 font-bold">{{ totalExpense | number }}</div>
+    </div>
+    <div class="bg-white drop-shadow-sm p-4 rounded-lg">
+      <div class="text-xs text-gray-600 mb-2">Balance</div>
+      <div class="md:text-2xl text-slate-600 font-bold">{{ balance | number }}</div>
+    </div>
+  </div>
+  <!-- /TOTALS -->
+
+  @for (day of days; track day.date) {
+  <app-day [day]="day" />
+
+  } } @else {
+  <p class="py-24 px-4 bg-gray-100 rounded-lg text-center text-gray-500">
+    <i class="fa fa-info-circle me-2"></i> There are no entries in this month
+  </p>
+  } }@else {
+  <p class="animate-pulse h-32 w-full bg-gray-100 rounded-lg mb-8"></p>
+  <p class="animate-pulse h-32 w-full bg-gray-100 rounded-lg"></p>
+  }
+
+  <button
+    (click)="addTransaction()"
+    class="bg-green-600 hover:bg-green-700 rounded-xl text-white text-xl md:text-2xl size-12 md:size-16 fixed lg:right-72 bottom-8 right-4"
+  >
+    <i class="fa fa-plus"></i>
+  </button>
+</div>

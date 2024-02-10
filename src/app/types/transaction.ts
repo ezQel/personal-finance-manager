@@ -1,10 +1,13 @@
+import { Category } from './category';
 import { TransactionType } from './transaction-type';
 
 export type Transaction = {
   _id: string;
-  date: string | number;
+  _rev: string;
+  date: string;
   type: TransactionType;
   amount: number;
-  description: string;
-  categoryName: string;
+  note: string;
+  categoryId: string;
+  category: Category;
 };

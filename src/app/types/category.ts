@@ -1,7 +1,8 @@
-import { TransactionType } from "./transaction-type";
+import { TransactionType } from './transaction-type';
 
 export type Category = {
-  id: number;
+  _id: string;
   name: string;
   type: TransactionType;
+  _rev: string;
 };

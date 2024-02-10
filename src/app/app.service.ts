@@ -1,161 +1,160 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Category } from './types/category';
-import { DayTransactions } from './types/day-transactions';
-import { Totals } from './types/totals';
-import { Transaction } from './types/transaction';
-import { groupBy, reduce } from 'underscore';
-import { formatDate } from '@angular/common';
 import PouchDb from 'pouchdb-browser';
+import find from 'pouchdb-find';
+import { Observable, Subject } from 'rxjs';
+import { populateDbWithDemoCategories, populateDbWithDemoTransactions } from './demo-data-init';
+import { Category } from './types/category';
+import { Month } from './types/month';
+import { Transaction } from './types/transaction';
+
+PouchDb.plugin(find);
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppService {
-  db: PouchDB.Database;
+  /**
+   * Database where transaction documents will be stored.
+   */
+  transactionsDb: PouchDB.Database;
 
-  transactions: Transaction[] = [
-    {
-      amount: 20000,
-      date: 1703176019532,
-      description: 'Fees',
-      _id: '1',
-      type: 'EXPENSE',
-      categoryName: 'Education',
-    },
-    {
-      amount: 200,
-      date: 1718276019590,
-      description: 'Lunch',
-      _id: '2',
-      type: 'EXPENSE',
-      categoryName: 'Food',
-    },
-    {
-      amount: 1200000,
-      date: 1703176019590,
-      description: 'Work',
-      _id: '12',
-      type: 'INCOME',
-      categoryName: 'Salary',
-    },
-    {
-      amount: 20000,
-      date: 1706001607906,
-      description: 'Fees',
-      _id: '3',
-      type: 'EXPENSE',
-      categoryName: 'Education',
-    },
-    {
-      amount: 200,
-      date: 1706001607906,
-      description: 'Supper',
-      _id: '4',
-      type: 'EXPENSE',
-      categoryName: 'Food',
-    },
-    {
-      amount: 1200000,
-      date: 1703176019590,
-      description: 'Work',
-      _id: '5',
-      type: 'INCOME',
-      categoryName: 'Salary',
-    },
-    {
-      amount: 20000,
-      date: 1703176019532,
-      description: 'Fees',
-      _id: '6',
-      type: 'EXPENSE',
-      categoryName: 'Food',
-    },
-    {
-      amount: 200,
-      date: 1703176019590,
-      description: 'Food',
-      _id: '7',
-      type: 'EXPENSE',
-      categoryName: 'Food',
-    },
-    {
-      amount: 1200000,
-      date: 1709176019590,
-      description: 'Work',
-      _id: '8',
-      type: 'INCOME',
-      categoryName: 'Food',
-    },
-  ];
+  /**
+   * Database where category documents will be stored.
+   */
+  categoriesDb: PouchDB.Database;
+
+  /**
+   * Observable subject of transactions for a specific month
+   */
+  transactions$ = new Subject<Transaction[]>();
+
+  /**
+   * Mango query for transactions db
+   */
+  transactionsQuery?: PouchDB.Find.FindRequest<Transaction> | null;
 
   constructor() {
-    this.db = new PouchDb('transactions');
+    // Initialize databases
+    this.transactionsDb = new PouchDb('transactions');
+    this.categoriesDb = new PouchDb('categories');
+
+    // Add demo records
+    populateDbWithDemoTransactions(this.transactionsDb).then(() => this.fetchTransactions());
+    populateDbWithDemoCategories(this.categoriesDb);
   }
 
-  addTransaction(transaction: Transaction): Observable<unknown> {
-    return of();
+  /**
+   * Adds a transaction to the pouchDB.
+   * @param transaction The transaction to be added.
+   * @returns A promise of the PouchDB response.
+   */
+  async addTransaction(transaction: Transaction): Promise<boolean> {
+    try {
+      await this.transactionsDb.put(transaction);
+    } catch (e) {
+      throw new Error('Adding transaction failed');
+    }
+
+    this.fetchTransactions(); // Refresh transactions observable
+    return true;
   }
 
-  getTransactions(): Observable<unknown> {
-    return of();
+  /**
+   * Queries transactions within the specified month from the PouchDB.
+   * @param month The month for which the trasnactions will be filtered.
+   * @returns A promise of a list of transactions.
+   */
+  getTransactions(month: Month): Observable<Transaction[]> {
+    const startDate = new Date(month.year, month.monthIndex, 1);
+    const endDate = new Date(month.year, month.monthIndex + 1, 0);
+    this.transactionsQuery = {
+      selector: { date: { $gte: startDate, $lte: endDate } },
+      sort: [{ date: 'desc' }],
+    };
+
+    this.fetchTransactions();
+    return this.transactions$.asObservable();
   }
 
-  getDayTransactions(): Observable<DayTransactions[]> {
-    const grouped = groupBy(this.transactions, (txn) =>
-      formatDate(txn.date, 'yyyy-MM-dd', 'en')
-    );
+  /**
+   * Queries transactions from the database and updates the `transactions$` observable
+   */
+  async fetchTransactions(): Promise<void> {
+    if (!this.transactionsQuery) {
+      return;
+    }
 
-    const transactions: DayTransactions[] = Object.entries(grouped).map(
-      ([date, transactions]) => {
-        const { totalIncome, totalExpense } = reduce(
-          transactions,
-          (totals, txn) => {
-            if (txn.type === 'EXPENSE') {
-              totals.totalExpense += txn.amount;
-              return totals;
-            }
+    return this.transactionsDb.find(this.transactionsQuery).then((response) => {
+      const transactions = response.docs as Transaction[];
+      this.transactions$.next(transactions);
+    });
+  }
 
-            totals.totalIncome += txn.amount;
-            return totals;
-          },
-          { totalIncome: 0, totalExpense: 0 }
-        );
-        return {
-          date,
-          transactions,
-          totalIncome,
-          totalExpense,
-        };
+  /**
+   * Deletes the specified transaction
+   * @param transaction The transaction to be deleted
+   */
+  async deleteTransaction(transaction: Transaction): Promise<boolean> {
+    try {
+      await this.transactionsDb.remove(transaction);
+    } catch (e) {
+      throw new Error('Deleting transaction failed');
+    }
+
+    this.fetchTransactions(); // Refresh transactions observable
+    return true;
+  }
+
+  /**
+   * Adds a transaction category to the PouchDB.
+   * @param category The category to be added.
+   * @returns A promise of the PouchDB response.
+   */
+  addCategory(category: Category): Promise<PouchDB.Core.Response> {
+    return this.categoriesDb.put(category);
+  }
+
+  /**
+   * Deletes the specified category
+   * @param category The category to be deleted
+   */
+  async deleteCategory(category: Category): Promise<PouchDB.Core.Response> {
+    try {
+      const isUsedInTransactions = await this.isCategoryUsedInTransactions(category._id);
+      if (isUsedInTransactions) {
+        throw new Error('Cannot remove! The category is used in transaction(s).');
       }
-    );
+    } catch (e) {
+      throw new Error('An unexpected error occured while deleting the category');
+    }
 
-    console.log(transactions);
-    return of(transactions);
+    return this.categoriesDb.remove(category);
   }
 
-  getTotals(): Observable<Totals> {
-    return of({ balance: 200000, totalExpense: 233400, totalIncome: 540000 });
-  }
-
-  addCategory(category: Category): Observable<unknown> {
-    return of();
-  }
-
-  getCategories(): Observable<Category[]> {
-    const categories: Category[] = [
-      {
-        id: 1,
-        name: 'Salary',
-        type: 'EXPENSE',
+  /**
+   * Checks if a category has been used in a transaction
+   * @param categoryId The id of the category to be checked
+   * @returns A promise with a boolean result
+   */
+  async isCategoryUsedInTransactions(categoryId: string): Promise<boolean> {
+    const result = await this.transactionsDb.find({
+      selector: {
+        'category._id': categoryId,
       },
-      {
-        id: 2,
-        name: 'Food',
-        type: 'INCOME',
-      },
-    ];
-    return of(categories);
+      fields: ['_id'],
+      limit: 1,
+    });
+
+    return result.docs.length > 0;
+  }
+
+  /**
+   * gets a list of transaction categories.
+   * @returns A promise of an array of transaction categories.
+   */
+  async getCategories(): Promise<Category[]> {
+    const docs = await this.categoriesDb.allDocs<Category>({ include_docs: true });
+    const categories = docs.rows.map((r) => r.doc) as Category[];
+    return categories;
   }
 }

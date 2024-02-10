@@ -1,0 +1,55 @@
+<app-error-message [message]="errorMessage" />
+
+@if(deleted){
+<p class="p-4 rounded-lg text-green-700 bg-green-100">The transaction has been deleted successfully</p>
+} @else {
+<mat-nav-list>
+  <a mat-list-item>
+    <div mat-list-item class="flex items-center">
+      <div class="grow">
+        <span class="mr-2">
+          @if (transaction.type === 'INCOME') {
+          <i class="fa-solid fa-circle-down text-green-600"></i>
+          } @else {
+          <i class="fa-solid fa-circle-up text-slate-500"></i>
+          }
+        </span>
+        {{ transaction.category.name }}
+      </div>
+      <strong>
+        @if (transaction.type === 'INCOME') {
+        <span class="text-green-600">+ {{ transaction.amount | number }}</span>
+        } @else {
+        <span class="text-slate-600">- {{ transaction.amount | number }}</span>
+        }
+      </strong>
+    </div>
+  </a>
+
+  <a mat-list-item>
+    <span matListItemTitle>Date</span>
+    <small matLine>
+      <strong>{{ transaction.date | date }}</strong>
+    </small>
+  </a>
+
+  @if (transaction.note) {
+  <a mat-list-item>
+    <span matListItemTitle>Note</span>
+    <small matLine>
+      <strong>{{ transaction.note }}</strong>
+    </small>
+  </a>
+  }
+
+  <div class="my-3 border-b border-slate-200"></div>
+
+  <a (click)="editTransaction()" mat-list-item>
+    <span matListItemTitle><i class="fa fa-edit mr-2"></i> Edit</span>
+  </a>
+
+  <a (click)="deleteTransaction()" mat-list-item>
+    <span matListItemTitle> <i class="fa fa-trash mr-2"></i> Delete</span>
+  </a>
+</mat-nav-list>
+}

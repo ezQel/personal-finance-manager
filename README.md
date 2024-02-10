@@ -1,6 +1,6 @@
 # Personal Finance Manager
 
-A web app that assists individuals with budgeting and tracking of their income and expenses.
+An angular web app for tracking individual income and expenses.
 
 ## Table of Contents
 
@@ -8,12 +8,14 @@ A web app that assists individuals with budgeting and tracking of their income a
 - [Getting Started](#getting-started)
 - [Testing](#testing)
 
-# Project Purpose/Justification
+# Project Purpose
 
-The puropose of this project is to demonstrate the following:
+The purpose of this project is to demonstrate the following:
 
 - Using tailwind in an angular application
-- Testing in angular
+- Developing components using angular CDK
+- Saving data locally with pouchdb
+- Unit testing in angular
 
 # Getting Started
 
@@ -29,3 +31,5 @@ In order to have more consistent builds, use a strict `node` and `npm` version a
 - To run the **development web app**: `npm start` or `ng serve`
 
 # Testing
+
+To run tests use: `ng test`

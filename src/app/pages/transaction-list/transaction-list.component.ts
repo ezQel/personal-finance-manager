@@ -9,11 +9,12 @@ import { TransactionAddComponent } from '../../components/transaction-add/transa
 import { DayTransactions } from '../../types/day-transactions';
 import { Month } from '../../types/month';
 import { Transaction } from '../../types/transaction';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-transaction-list',
   standalone: true,
-  imports: [DecimalPipe, AsyncPipe, MonthFilterComponent, DayTransactionComponent, TransactionAddComponent],
+  imports: [RouterLink, DecimalPipe, AsyncPipe, MonthFilterComponent, DayTransactionComponent, TransactionAddComponent],
   templateUrl: './transaction-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
